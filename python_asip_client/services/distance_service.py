@@ -1,4 +1,4 @@
-from services.asip_service import AsipService
+from python_asip_client.services.asip_service import AsipService
 import sys
 
 class DistanceService(AsipService):

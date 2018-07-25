@@ -3,7 +3,7 @@ __author__ = 'Gianluca Barbon'
 # import AsipWriter
 import sys
 # import traceback
-from port_manager import PortManager
+from python_asip_client.boards.port_manager import PortManager
 
 
 class AsipClient:
@@ -33,8 +33,8 @@ class AsipClient:
     GET_PIN_CAPABILITIES = 'c'  # gets a bitfield array indicating pin capabilities
     
     #tag for system messages:
-    SYSTEM_GET_INFO = '?' # Get version and hardware info
-    RESTART_REQUEST = 'R' # disables all autoevents and attempts to restart all services 
+    SYSTEM_GET_INFO = '?'  # Get version and hardware info
+    RESTART_REQUEST = 'R'  # disables all autoevents and attempts to restart all services
 
     # Pin modes (these are public)
     INPUT = 1  # defined in Arduino.h
@@ -44,7 +44,7 @@ class AsipClient:
     PWM = 5  # digital pin in PWM output mode
 
     EVENT_HANDLER = '@'  # Standard incoming message
-    SYSTEM_MSG_HEADER    = '#'  # incoming is a system message 
+    SYSTEM_MSG_HEADER = '#'  # incoming is a system message
     ERROR_MESSAGE_HEADER = '~'  # Incoming message: error report
     DEBUG_MESSAGE_HEADER = '!'  # A debug message from the board (can be ignored, probably)
 
@@ -69,7 +69,7 @@ class AsipClient:
     # out = AsipWriter()
     __out = None
 
-    __AsipVersionOk = False # flag to indicate that a valid version message has been received
+    __AsipVersionOk = False  # flag to indicate that a valid version message has been received
      
     # ************   END PRIVATE FIELDS DEFINITION ****************
 
@@ -114,9 +114,10 @@ class AsipClient:
 
     # method to request ASIP system info
     def request_info(self):
-        self.__out.write("{},{}\n".format(self.SYSTEM_MSG_HEADER,self.SYSTEM_GET_INFO))     
+        self.__out.write("{},{}\n".format(self.SYSTEM_MSG_HEADER, self.SYSTEM_GET_INFO))
         if self.DEBUG:
             sys.stdout.write("DEBUG: Requesting info {},{}\n".format(self.SYSTEM_MSG_HEADER,self.SYSTEM_GET_INFO))               
+
     # A method to request the mapping between ports and pins.
     # See process_port_data and process_pin_mapping for additional details on the actual mapping.
     def request_port_mapping(self):
@@ -266,7 +267,6 @@ class AsipClient:
 # ************ TESTING *************
 # A simple main method to test off-line
 
-
 def main():
     test_client = AsipClient()
     test_client.process_input("@I,M,20{4:1,4:2,4:4,4:8,4:10,4:20,4:40,4:80,2:1,2:2,2:4,2:8,2:10,2:20,3:1,3:2,3:4,3:8,3:10,3:20}")
@@ -274,7 +274,10 @@ def main():
     test_client.process_input("@I,p,4,10")
     test_client.process_input("@I,p,4,FF")
 
-# De-comment to test this class
-#main()
+
+if __name__ == '__main__':
+    # De-comment to test this class
+    # main()
+    pass
 
 

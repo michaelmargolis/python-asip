@@ -4,9 +4,9 @@ import time
 import sys
 import glob
 import serial
-from asip_client import AsipClient
+from python_asip_client.boards.asip_client import AsipClient
 from threading import Thread
-from asip_writer import AsipWriter
+from python_asip_client.boards.asip_writer import AsipWriter
 from serial import Serial
 import threading
 

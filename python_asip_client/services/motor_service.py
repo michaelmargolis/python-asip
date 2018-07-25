@@ -1,4 +1,4 @@
-from services.asip_service import AsipService
+from python_asip_client.services.asip_service import AsipService
 import sys
 
 class MotorService(AsipService):
@@ -43,14 +43,21 @@ class MotorService(AsipService):
         # Do nothing for motors
         pass
 
+    def enable_encoder(self):
+        self.asip.get_asip_writer().write(
+            "{},{},{}".format(self._serviceID, AsipService.AUTOEVENT_REQUEST, str(1)))
+
+    def disable_encoder(self):
+        self.asip.get_asip_writer().write(
+            "{},{},{}".format(self._serviceID, AsipService.AUTOEVENT_REQUEST, str(0)))
+
     def set_motor(self, speed):
-        # Speed should be between -100 and +100
-        if speed > 255:
-            speed = 255
-        if speed < -255:
-            speed = -255
+        if speed > 100:
+            speed = 100
+        if speed < -100:
+            speed = -100
         if self.DEBUG:
-            sys.stdout.write("DEBUG: setting motor {} to {}\n".format(self._motorID,speed))
+            sys.stdout.write("DEBUG: setting motor {} to {}\n".format(self._motorID, speed))
 
         # Motors have been mounted the other way around, so swapping IDs 0 with 1 for id
         # self.asip.get_asip_writer().write(self._serviceID + ","
@@ -63,3 +70,4 @@ class MotorService(AsipService):
     # Stop the motor (just set speed to 0)
     def stop_motor(self):
         self.set_motor(0)
+

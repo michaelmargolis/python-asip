@@ -1,7 +1,7 @@
 __author__ = 'Gianluca Barbon'
 
-from asip_client import AsipClient
-from asip_writer import AsipWriter
+from python_asip_client.boards.asip_client import AsipClient
+from python_asip_client.boards.asip_writer import AsipWriter
 import threading
 from threading import Thread
 import socket

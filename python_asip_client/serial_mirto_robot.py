@@ -1,8 +1,8 @@
-from serial_board import SerialBoard
-from services.bump_service import BumpService
-from services.encoder_service import EncoderService
-from services.ir_service import IRService
-from services.motor_service import MotorService
+from python_asip_client.boards.serial_board import SerialBoard
+from python_asip_client.services.bump_service import BumpService
+from python_asip_client.services.encoder_service import EncoderService
+from python_asip_client.services.ir_service import IRService
+from python_asip_client.services.motor_service import MotorService
 import sys
 import time
 
@@ -21,20 +21,22 @@ class SerialMirtoRobot(SerialBoard):
 
         # Setting reporting interval of sensors
         reporting_interval = 25
-        self._encoders[0].set_reporting_interval(reporting_interval)
-        self._encoders[1].set_reporting_interval(reporting_interval)
+        self._motors[0].enable_encoder()
+        self._motors[1].enable_encoder()
+        # self._encoders[0].set_reporting_interval(reporting_interval)
+        # self._encoders[1].set_reporting_interval(reporting_interval)
         self._irs[0].set_reporting_interval(reporting_interval)
         self._irs[1].set_reporting_interval(reporting_interval)
         self._irs[2].set_reporting_interval(reporting_interval)
-        self._bumps[0].set_reporting_interval(reporting_interval)
-        self._bumps[1].set_reporting_interval(reporting_interval)
+        # self._bumps[0].set_reporting_interval(reporting_interval)
+        # self._bumps[1].set_reporting_interval(reporting_interval)
         sys.stdout.write("DEBUG: reporting interval set to {}\n".format(reporting_interval))
 
         #  Adding services
         self.get_asip_client().add_service(self._motors[0].get_service_id(), self._motors)
         self.get_asip_client().add_service(self._encoders[0].get_service_id(), self._encoders)
         self.get_asip_client().add_service(self._irs[0].get_service_id(), self._irs)
-        self.get_asip_client().add_service(self._bumps[0].get_service_id(), self._bumps)
+        # self.get_asip_client().add_service(self._bumps[0].get_service_id(), self._bumps)
         sys.stdout.write("DEBUG: services added\n")
 
     # Setting the two motors speed
@@ -83,6 +85,10 @@ class SerialMirtoRobot(SerialBoard):
         except Exception as e:
             sys.stdout.write("Exception: caught {} in testing mirto robot\n".format(e))
 
-# method for testing is called
+        finally:
+            sys.stdout.write("Finished tests\n")
+
+
+# Method for testing is called
 if __name__ == "__main__":
     SerialMirtoRobot().test()

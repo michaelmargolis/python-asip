@@ -1,1 +1,1 @@
-__author__ = 'Gianluca Barbon'
+name = "python_asip_client"

@@ -1,4 +1,4 @@
-from services.asip_service import AsipService
+from python_asip_client.services.asip_service import AsipService
 import sys
 
 class EncoderService(AsipService):
@@ -7,9 +7,9 @@ class EncoderService(AsipService):
 
     # An encoder has a unique ID (there may be more than one encoder attached, each one has a different encoderID)
     _encoderID = ""
-    asip = None # The service should be attached to a client
-    _count = 0 # Count for the encoder
-    _pulse = 0 # Pulse for the encoder
+    asip = None  # The service should be attached to a client
+    _count = 0  # Count for the encoder
+    _pulse = 0  # Pulse for the encoder
 
     # Service constant
     __TAG_ENCODER_RESPONSE = 'e'
@@ -25,7 +25,7 @@ class EncoderService(AsipService):
     def get_service_id(self):
         return self._serviceID
 
-    def set_service_id(self,id):
+    def set_service_id(self, id):
         self._serviceID = id
 
     # receives an instance of AsipClient as parameter
@@ -44,8 +44,7 @@ class EncoderService(AsipService):
     # Set the reporting time to t milliseconds (use t=0 to disable reporting)
     # Notice that this will affect all encoders
     def set_reporting_interval(self, t):
-        #self.asip.get_asip_writer().write(self._serviceID+","+AsipService.AUTOEVENT_REQUEST+","+t)
-        self.asip.get_asip_writer().write("{},{},{}".format(self._serviceID,AsipService.AUTOEVENT_REQUEST,t))
+        self.asip.get_asip_writer().write("{},{},{}".format(self._serviceID, AsipService.AUTOEVENT_REQUEST, t))
 
     def process_response(self, message):
         # A response for a message is something like "@E,e,2,{3000:110,3100:120}"
@@ -71,4 +70,4 @@ class EncoderService(AsipService):
         return self._pulse
 
     def reset_count(self):
-        self._count= 0
+        self._count = 0
