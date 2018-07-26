@@ -13,7 +13,7 @@ class TCPBoard:
 
     # ************   BEGIN CONSTANTS DEFINITION ****************
 
-    DEBUG = True  # Activates debug messages
+    DEBUG = False  # Activates debug messages
     __BUFFER_SIZE = 256  # TCP buffer size
     __RECV_TIMEOUT = 2  # socket receive timeout in second
 
@@ -28,7 +28,7 @@ class TCPBoard:
     # ************   END PRIVATE FIELDS DEFINITION ****************
 
     # tcp_port = 6789 is the one used by the java bridge by franco in mirto
-    def __init__(self, ip_address='127.0.0.1', tcp_port=5005):
+    def __init__(self, ip_address='127.0.0.1', tcp_port=6789):
         try:
             sys.stdout.write("Setting tcp: attempting to connect to {} and port {}\n".format(ip_address, tcp_port))
             self.__sock_conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -63,13 +63,18 @@ class TCPBoard:
                 #     self.asip.request_info()
                 #     time.sleep(1.0)
                 # Checking mapping
+                reported = False
+                time.sleep(1)
                 while not self.asip.check_mapping():
                     self.asip.request_port_mapping()
+                    if not reported:
+                        sys.stdout.write("Expecting for port mapping from ASIP.\n")
+                        reported = True
                     time.sleep(0.5)
                 self.asip.set_auto_report_interval(0)
                 sys.stdout.write("Creating Threads: Mapping received, auto-report interval set to 0. Running now!\n")
 
-           # KeyboardInterrupt handling in order to close every thread correctly
+            # KeyboardInterrupt handling in order to close every thread correctly
             except KeyboardInterrupt:  # KeyboardInterrupt handling in order to close every thread correctly
                 sys.stdout.write("KeyboardInterrupt while checking mapping. Attempting to close listener thread.\n")
                 self.thread_killer()
@@ -132,16 +137,16 @@ class TCPBoard:
         def write(self, val):
             # TODO: insert a way to check weather the connection is still open or not
             try:
-                self.sock_conn.send(val)
+                self.sock_conn.send(val.encode())
                 if self.DEBUG:
                     sys.stdout.write("DEBUG: sent {}\n".format(val))
             except Exception as e:
-                sys.stdout.write("Caught exception in serial write: {}\n".format(e))
+                sys.stdout.write("Caught exception in tcp write: {}\n".format(e))
 
     # ListenerThread read the tcp/ip stream and call process_input
     class ListenerThread(Thread):
 
-        # overriding constructor
+        # Overriding constructor
         def __init__(self, asip, sock_conn, timeout, buffer_size=256, debug=False):
             Thread.__init__(self)
             self.asip = asip
@@ -152,28 +157,28 @@ class TCPBoard:
             self._stopper = threading.Event()
             sys.stdout.write("Listener Thread: thread process created.\n")
 
-        # if needed, kill will stops the loop inside run method
+        # If needed, kill will stops the loop inside run method
         def stopper(self):
             sys.stdout.write("Listener Thread: now stopping.\n")
             self._stopper.set()
 
-        # overriding run method, thread activity
+        # Overriding run method, thread activity
         def run(self):
-            time.sleep(2)  # TODO: maybe reduce this sleep?
+            time.sleep(0.5)  # TODO: maybe reduce this sleep?
             sys.stdout.write("Listener Thread: now running.\n")
             temp_buffer = ""
             while not self._stopper.is_set():
                 try:
-                    data = self.sock_conn.recv(self.BUFFER_SIZE)
+                    data = self.sock_conn.recv(self.BUFFER_SIZE).decode()
                     # sys.stdout.write("Received data is: {}\n".format(data))
                     if data != '\r' and data != '\n' and data != ' ' and data is not None:  # ignore empty lines
                         if "\n" in data:
                             # If there is at least one newline, we need to process
-                            # the message (the buffer may contain previous characters).
+                            # The message (the buffer may contain previous characters).
                             while "\n" in data and len(data) > 0:
                                 # But remember that there could be more than one newline in the buffer
                                 temp_buffer += (data[0:data.index("\n")])
-                                temp = temp_buffer.encode()
+                                temp = temp_buffer
                                 self.asip.process_input(temp)
                                 temp_buffer = ""
                                 if data[data.index("\n")+1:] == '\n':
@@ -187,12 +192,12 @@ class TCPBoard:
                             temp_buffer += data
                 except socket.timeout as e:
                     err = e.args[0]
-                    if err == 'timed out':  # socket time out, if the _stop value is set, program will exit
+                    if err == 'timed out':  # Socket time out, if the _stop value is set, program will exit
                         continue
+
                 except Exception as e:
-                    sys.stdout.write("Caught exception in listener: {}\nListener will now stop\n".format(e))
+                    sys.stdout.write("Caught exception in listener: {} . Message: {}\nListener will now stop\n".format(
+                        e, data))
                     self.stopper()
 
             sys.stdout.write("Listener Thread: stopped\n")
-
-    # ************ END PRIVATE CLASSES *************

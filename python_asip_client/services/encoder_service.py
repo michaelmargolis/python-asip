@@ -41,11 +41,6 @@ class EncoderService(AsipService):
     def set_encoder_id(self, id):
         self._encoderID = id
 
-    # Set the reporting time to t milliseconds (use t=0 to disable reporting)
-    # Notice that this will affect all encoders
-    def set_reporting_interval(self, t):
-        self.asip.get_asip_writer().write("{},{},{}".format(self._serviceID, AsipService.AUTOEVENT_REQUEST, t))
-
     def process_response(self, message):
         # A response for a message is something like "@E,e,2,{3000:110,3100:120}"
         if message[3] != self.__TAG_ENCODER_RESPONSE:

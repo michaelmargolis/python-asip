@@ -32,8 +32,7 @@ class SerialBoard:
     # ************   END PRIVATE FIELDS DEFINITION ****************
 
     # Self constructor find the name of an active serial port and it creates a Serial objted
-    def __init__(self):
-
+    def __init__(self, tcp_handler=None):
         # Serial connection creation, AsipClient object creation
         try:
             self.__ser_conn = Serial()
@@ -48,7 +47,7 @@ class SerialBoard:
 
         # Listener creation
         try:
-            self.__threads.append(self.ListenerThread(self.asip, self.__ser_conn, self.DEBUG))
+            self.__threads.append(self.ListenerThread(self.asip, self.__ser_conn, self.DEBUG, tcp_handler))
             sys.stdout.write("Creating Threads: starting\n")
             self.__threads[0].start()
             while not self.__threads[0].is_alive():  # checking that listener is alive
@@ -67,11 +66,19 @@ class SerialBoard:
                 #     self.asip.request_info()
                 #     time.sleep(1.0)sing
                 # Checking mapping
-                while not self.asip.check_mapping():
-                    self.asip.request_port_mapping()
-                    time.sleep(0.5)
-                self.asip.set_auto_report_interval(100)
-                sys.stdout.write("Creating Threads: Mapping received, auto-report interval set to 0. Running now!\n")
+                time.sleep(0.5)
+                if tcp_handler is not None:
+                    sys.stdout.write("Creating Threads: Mapping sent to client. Running now!\n")
+                else:
+                    reported = False
+                    while not self.asip.check_mapping():
+                        self.asip.request_port_mapping()
+                        if not reported:
+                            sys.stdout.write("Waiting for port mapping\n")
+                            reported = True
+                        time.sleep(0.5)
+                    self.asip.set_auto_report_interval(100)
+                    sys.stdout.write("Creating Threads: Mapping received, auto-report interval set to 0. Running now!\n")
             except KeyboardInterrupt:  # KeyboardInterrupt handling in order to close every thread correctly
                 sys.stdout.write("KeyboardInterrupt while checking mapping. Attempting to close listener thread.\n")
                 self.thread_killer()
@@ -206,13 +213,14 @@ class SerialBoard:
     # ListenerThread read the serial stream and call process_input
     class ListenerThread(Thread):
 
-        # overriding constructor
-        def __init__(self, asip, ser_conn, debug=False):
+        # Overriding constructor
+        def __init__(self, asip, ser_conn, debug=False, tcp_handler=None):
             Thread.__init__(self)
             self.asip = asip
             self.ser_conn = ser_conn
             self.DEBUG = debug
             self._stopper = threading.Event()
+            self.tcp_handler = tcp_handler
             sys.stdout.write("Listener Thread: thread process created.\n")
 
         # if needed, kill will stops the loop inside run method
@@ -222,7 +230,7 @@ class SerialBoard:
 
         # overriding run method, thread activity
         def run(self):
-            time.sleep(2)  # TODO: maybe reduce this sleep?
+            time.sleep(1)  # TODO: maybe reduce this sleep?
             sys.stdout.write("Listener Thread: now running.\n")
             ser_buffer = ""
             while not self._stopper.is_set():
@@ -237,7 +245,13 @@ class SerialBoard:
                         if c == '\n' or c == '\n':
                             if len(ser_buffer) > 0:
                                 ser_buffer += '\n'
-                                self.asip.process_input(ser_buffer)
+                                # If tcp board is enabled then send it over a tcp connection, otherwise process it
+                                if self.tcp_handler is not None:
+                                    # Send message over tcp connection
+                                    self.tcp_handler.send_data(ser_buffer)
+                                    # sys.stdout.write("Sending message using TCP handler: {}\n".format(ser_buffer))
+                                else:
+                                    self.asip.process_input(ser_buffer)
                                 if self.DEBUG:
                                     sys.stdout.write("DEBUG: Complete message from serial: {}\n".format(ser_buffer))
                             ser_buffer = ""

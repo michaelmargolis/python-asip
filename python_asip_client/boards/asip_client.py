@@ -121,9 +121,9 @@ class AsipClient:
     # A method to request the mapping between ports and pins.
     # See process_port_data and process_pin_mapping for additional details on the actual mapping.
     def request_port_mapping(self):
-        self.__out.write("{},{}\n".format(self.IO_SERVICE,self.PORT_MAPPING))
+        self.__out.write("{},{}\n".format(self.IO_SERVICE, self.PORT_MAPPING))
         if self.DEBUG:
-            sys.stdout.write("DEBUG: Requesting port mapping with {},{}\n".format(self.IO_SERVICE,self.PORT_MAPPING))
+            sys.stdout.write("DEBUG: Requesting port mapping with {},{}\n".format(self.IO_SERVICE, self.PORT_MAPPING))
 
     def digital_read(self, pin):
         # FIXME: should add error checking here

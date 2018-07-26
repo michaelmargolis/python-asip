@@ -1,6 +1,6 @@
 __author__ = 'Gianluca Barbon'
 
-from tcp_board import TCPBoard
+from python_asip_client.boards.tcp_board import TCPBoard
 import sys
 import time
 
@@ -33,5 +33,5 @@ class SimpleTCPBlink(TCPBoard):
 
 # test SimpleBlink
 if __name__ == "__main__":
-    IPaddress = "192.168.0.100"
+    IPaddress = "10.42.0.149"
     SimpleTCPBlink(IPaddress).main()
