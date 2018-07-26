@@ -35,60 +35,31 @@ class SerialMirtoRobot(SerialBoard):
         self.get_asip_client().add_service(self._bumps[0].get_service_id(), self._bumps)
         sys.stdout.write("DEBUG: services added\n")
 
-    # Setting the two motors speed
-    def set_motors(self, s0, s1):
-        self._motors[0].set_motor(s0)
-        self._motors[1].set_motor(s1)
-        sys.stdout.write("DEBUG: setting motors to {}, {}\n".format(s0, s1))
+    def get_services(self):
+        return {"motors": self._motors, "irs": self._irs, "bumps": self._bumps}
 
-    # Stopping the two motors
-    def stop_motors(self):
-        self._motors[0].stop_motor()
-        self._motors[1].stop_motor()
-
-    # Retrieving data from IR sensor, -1 if sensor number is wrong
-    def get_ir(self, sensor):
-        return self._irs[sensor].get_ir() if sensor in [0, 1, 2] else -1
-
-    # Retrieving count value from encoder sensor, -1 if sensor number is wrong
-    def get_count(self, sensor):
-        return self._motors[sensor].get_count() if sensor in [0, 1] else -1
-
-    # Retrieving count value from bump sensor, -1 if sensor number is wrong
-    def is_pressed(self, sensor):
-        return self._bumps[sensor].is_pressed() if sensor in [0, 1] else -1
-
-    def reset_count(self):
-        self._motors[0].reset_count()
-        sys.stdout.write("Reset encoders\n")
-
-    # method for testing
-    def test(self):
-        try:
-            time.sleep(0.5)
-            while True:
-                sys.stdout.write("IR: {}, {}, {}\n".format(self.get_ir(0), self.get_ir(1), self.get_ir(2)))
-                sys.stdout.write("Encoders: {}, {}\n".format(self.get_count(0), self.get_count(1)))
-                sys.stdout.write("Bumpers: {}, {}\n".format(self.is_pressed(0), self.is_pressed(1)))
-                sys.stdout.write("Setting motors to 100, 0\n")
-                self.set_motors(100, 0)
-                time.sleep(1.5)
-                sys.stdout.write("Stopping motors\n")
-                self.stop_motors()
-                time.sleep(0.5)
-                sys.stdout.write("Setting motors to 0, -250\n")
-                self.set_motors(0, -250)
-                time.sleep(1.5)
-                sys.stdout.write("Stopping motors\n")
-                self.stop_motors()
-                time.sleep(0.5)
-        except Exception as e:
-            sys.stdout.write("Exception: caught {} in testing mirto robot\n".format(e))
-
-        finally:
-            sys.stdout.write("Finished tests\n")
-
-
-# Method for testing is called
-if __name__ == "__main__":
-    SerialMirtoRobot().test()
+    # # method for testing
+    # def test(self):
+    #     try:
+    #         time.sleep(0.5)
+    #         while True:
+    #             sys.stdout.write("IR: {}, {}, {}\n".format(self.get_ir(0), self.get_ir(1), self.get_ir(2)))
+    #             sys.stdout.write("Encoders: {}, {}\n".format(self.get_count(0), self.get_count(1)))
+    #             sys.stdout.write("Bumpers: {}, {}\n".format(self.is_pressed(0), self.is_pressed(1)))
+    #             sys.stdout.write("Setting motors to 100, 0\n")
+    #             self.set_motors(100, 0)
+    #             time.sleep(1.5)
+    #             sys.stdout.write("Stopping motors\n")
+    #             self.stop_motors()
+    #             time.sleep(0.5)
+    #             sys.stdout.write("Setting motors to 0, -250\n")
+    #             self.set_motors(0, -250)
+    #             time.sleep(1.5)
+    #             sys.stdout.write("Stopping motors\n")
+    #             self.stop_motors()
+    #             time.sleep(0.5)
+    #     except Exception as e:
+    #         sys.stdout.write("Exception: caught {} in testing mirto robot\n".format(e))
+    #
+    #     finally:
+    #         sys.stdout.write("Finished tests\n")
