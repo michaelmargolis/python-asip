@@ -9,30 +9,66 @@ class MirtoRobot:
         self.irs = _services.get('irs')
         self.bumps = _services.get('bumps')
 
-    # Setting the two motors speed
-    def set_motors(self, s0, s1):
-        self.motors[0].set_motor(s0)
-        self.motors[1].set_motor(s1)
-        sys.stdout.write("DEBUG: setting motors to {}, {}\n".format(s0, s1))
+    def set_motors(self, speed1, speed2):
+        """
+        Setting the two motors speed. Speed value is between: -100 and 100
+        :param speed1: int
+        :param speed2: int
+        :return:
+        """
+        self.motors[0].set_motor(speed1)
+        self.motors[1].set_motor(speed2)
+        sys.stdout.write("DEBUG: setting motors to {}, {}\n".format(speed1, speed2))
 
-    # Stopping the two motors
     def stop_motors(self):
+        """
+        Stopping the two motors
+        :return:
+        """
         self.motors[0].stop_motor()
         self.motors[1].stop_motor()
 
-    # Retrieving data from IR sensor, -1 if sensor number is wrong
     def get_ir(self, sensor):
+        """
+        Retrieving data from IR sensor, -1 if sensor number is wrong
+        :param sensor: int
+        :return:
+        """
         return self.irs[sensor].get_ir() if sensor in [0, 1, 2] else -1
 
-    # Retrieving count value from encoder sensor, -1 if sensor number is wrong
     def get_count(self, sensor):
+        """
+        Retrieving count value from encoder sensor, -1 if sensor number is wrong
+        :param sensor: int
+        :return:
+        """
         return self.motors[sensor].get_count() if sensor in [0, 1] else -1
 
-    # Retrieving count value from bump sensor, -1 if sensor number is wrong
-    def is_pressed(self, sensor):
+    def get_encoders(self, pulse=True):
+        """
+        This function is returning a list with count and pulse values from both encoders.
+        By default function is returning them both, however you can provide second optional argument to change it.
+        :return: encoders values: list
+        """
+        if pulse:
+            return [[self.motors[0].get_count(), self.motors[0].get_pulse()],
+                    [self.motors[1].get_count(), self.motors[1].get_pulse()]]
+        else:
+            return [self.motors[0].get_count(), self.motors[1].get_count()]
+
+    def is_bump_pressed(self, sensor):
+        """
+        Retrieving count value from bump sensor, -1 if sensor number is wrong.
+        :param sensor: int
+        :return:
+        """
         return self.bumps[sensor].is_pressed() if sensor in [0, 1] else -1
 
     def reset_count(self):
+        """
+        This function is resetting count for both encoders.
+        :return:
+        """
         self.motors[0].reset_count()
         sys.stdout.write("Reset encoders\n")
 

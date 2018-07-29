@@ -3,13 +3,12 @@ from python_asip_client.services.bump_service import BumpService
 from python_asip_client.services.ir_service import IRService
 from python_asip_client.services.motor_service import MotorService
 import sys
-import time
 
 
 class TCPMirtoRobot(TCPBoard):
 
-    def __init__(self, ip, tcp_port=9999):
-        TCPBoard.__init__(self, ip, tcp_port)
+    def __init__(self, hostname=None, ip_address='127.0.0.1', tcp_port=9999):
+        TCPBoard.__init__(self, hostname, ip_address, tcp_port)
 
         # Creating instances of services
         self._motors = [MotorService(0, self.asip), MotorService(1, self.asip)]  # init 2 motors (wheels)
@@ -37,31 +36,3 @@ class TCPMirtoRobot(TCPBoard):
 
     def get_services(self):
         return {"motors": self._motors, "irs": self._irs, "bumps": self._bumps}
-
-    def test(self):
-        sys.stdout.write("Start test for tcp\n")
-        try:
-            time.sleep(1)
-            sys.stdout.write("IR: {}, {}, {}\n".format(self.get_ir(0), self.get_ir(1), self.get_ir(2)))
-            sys.stdout.write("Encoders: {}, {}\n".format(self.get_count(0), self.get_count(1)))
-            sys.stdout.write("Bumpers: {}, {}\n".format(self.is_pressed(0), self.is_pressed(1)))
-            sys.stdout.write("Setting motors to 100, 0\n")
-            self.set_motors(100, 0)
-            time.sleep(1.5)
-            sys.stdout.write("Stopping motors\n")
-            self.stop_motors()
-            time.sleep(0.5)
-            sys.stdout.write("Setting motors to 0, -250\n")
-            self.set_motors(0, -250)
-            time.sleep(1.5)
-            sys.stdout.write("Stopping motors\n")
-            self.stop_motors()
-            time.sleep(0.5)
-        except Exception as e:
-            sys.stdout.write("Exception: caught {} in testing mirto robot\n".format(e))
-
-
-# Method for testing is called
-if __name__ == "__main__":
-    ip_address = "10.14.122.61"
-    TCPMirtoRobot(ip_address).test()

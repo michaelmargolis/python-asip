@@ -23,12 +23,16 @@ class TCPBoard:
 
     # asip: The client for the asip protocol
     # __sock_conn: tcp/ip socket communication
-    __threads = []  # List of threads
 
     # ************   END PRIVATE FIELDS DEFINITION ****************
 
     # tcp_port = 6789 is the one used by the java bridge by franco in mirto
-    def __init__(self, ip_address='127.0.0.1', tcp_port=6789):
+    def __init__(self, hostname=None, ip_address='127.0.0.1', tcp_port=9999):
+        self.__threads = []  # List of threads
+        # Find the ip address
+        if hostname is not None:
+            ip_address = socket.gethostbyname(hostname)
+            sys.stdout.write("Found ip address: {} for hostname: {}\n".format(ip_address, hostname))
         try:
             sys.stdout.write("Setting tcp: attempting to connect to {} and port {}\n".format(ip_address, tcp_port))
             self.__sock_conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -36,7 +40,7 @@ class TCPBoard:
             self.asip = AsipClient(self.SimpleTCPWriter(self.__sock_conn, self.DEBUG))
         except Exception as e:
             sys.stdout.write("Exception caught in init tcp socket and asip protocols {}\n".format(e))
-            try:  # try to close connection
+            try:  # Try to close connection
                 self.close_tcp_conn()
             finally:
                 sys.exit(1)

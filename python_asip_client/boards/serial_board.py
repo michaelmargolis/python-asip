@@ -27,12 +27,13 @@ class SerialBoard:
     # asip: The client for the asip protocol
     # __ser_conn: self board uses serial communication
     __ports = []  # serial ports array
-    __threads = []  # List of threads
 
     # ************   END PRIVATE FIELDS DEFINITION ****************
 
     # Self constructor find the name of an active serial port and it creates a Serial objted
     def __init__(self, tcp_handler=None):
+        self.__threads = []  # List of threads
+
         # Serial connection creation, AsipClient object creation
         try:
             self.__ser_conn = Serial()
@@ -49,7 +50,9 @@ class SerialBoard:
         try:
             self.__threads.append(self.ListenerThread(self.asip, self.__ser_conn, self.DEBUG, tcp_handler))
             sys.stdout.write("Creating Threads: starting\n")
-            self.__threads[0].start()
+            for thread in self.__threads:
+                if not thread.is_alive():
+                    thread.start()
             while not self.__threads[0].is_alive():  # checking that listener is alive
                 pass
             sys.stdout.write("Creating Threads: all threads created and alive\n")

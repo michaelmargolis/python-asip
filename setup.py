@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name="python_asip_client",
-    version="1.0.3",
+    version="1.0.5",
     author="Gianluca Barbon, Adam Jarzebak, Michael Margolis, Franco Raimondi",
     author_email="adam@jarzebak.eu",
     description="Serial manager for Mirto robot services",

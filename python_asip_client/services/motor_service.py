@@ -75,12 +75,6 @@ class MotorService(AsipService):
             speed = -100
         if self.DEBUG:
             sys.stdout.write("DEBUG: setting motor {} to {}\n".format(self._motorID, speed))
-
-        # Motors have been mounted the other way around, so swapping IDs 0 with 1 for id
-        # self.asip.get_asip_writer().write(self._serviceID + ","
-        #                                     + self.__TAG_SET_MOTOR_SPEED + ","
-        #                                     + str(0 if self._motorID == 1 else 1)  # swapping
-        #                                     + "," + speed)
         self.asip.get_asip_writer().write("{},{},{},{}".format(
             self._serviceID, self.__TAG_SET_MOTOR_SPEED, 0 if self._motorID == 1 else 1, speed))
 
@@ -96,4 +90,4 @@ class MotorService(AsipService):
 
     def reset_count(self):
         self.asip.get_asip_writer().write(
-            "{},{}".format(self._serviceID, self.__TAG_RESET_ENCODER_COUNTS))
+            "{},{},".format(self._serviceID, self.__TAG_RESET_ENCODER_COUNTS))
