@@ -87,20 +87,20 @@ class MirtoRobot:
             sensor_values.append(self.get_ir(sensor))
         return sensor_values
 
-    def set_motor_rpm(self, motor_ID, rpm, duration):
+    def set_motor_rpm(self, motor_id, rpm, duration):
         """
         This function takes in a motor_ID, RPM and duration
-        :param motor_ID: int
+        :param motor_id: int
         :param rpm: int
         :param duration: int
         :return: if error return -1
         """
-        if motor_ID in [0,1]:
-            self.motors[motor_ID].set_motor_rpm( rpm, duration)
+        if motor_ID in [0, 1]:
+            self.motors[motor_id].set_motor_rpm(rpm, duration)
         else:
             return -1
 
-    def set_motors_rpm(self,rpm0, rpm1, duration):
+    def set_motors_rpm(self, rpm0, rpm1, duration):
         """
         This function takes in a RPM0, RPM1 and duration
         :param rpm0: int
@@ -110,19 +110,19 @@ class MirtoRobot:
         """
         self.motors[0].set_motors_rpm(rpm0, rpm1, duration)
 
-    def set_LCD_message(self, message, line):
+    def set_lcd_message(self, message, line):
         """
         This function takes in a message and a line number
         :param message: string
         :param line: int
         :return: if error return -1
         """
-        if line in [0,1,2,3,4]:
+        if line in [0, 1, 2, 3, 4]:
             self.lcd[0].set_LCD_message(message, line)
         else:
             return -1
 
-    def clear_LCD(self):
+    def clear_lcd(self):
         """
         This function clears the LCD display
         :return: None
