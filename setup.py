@@ -11,7 +11,7 @@ setup(
     description="Serial manager for Mirto robot services",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/mdxmase/mirto_python_asip",
+    url="https://github.com/mdxmase/python-asip",
     packages=find_packages(),
     classifiers=(
         "Programming Language :: Python :: 3",
