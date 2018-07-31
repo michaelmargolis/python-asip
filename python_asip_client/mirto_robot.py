@@ -8,7 +8,6 @@ class MirtoRobot:
         self.motors = _services.get("motors")
         self.irs = _services.get('irs')
         self.bumps = _services.get('bumps')
-       # self.PID = _services.get('PID')
 
     def set_motors(self, speed1, speed2):
         """
