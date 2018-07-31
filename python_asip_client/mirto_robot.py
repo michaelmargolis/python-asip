@@ -8,6 +8,7 @@ class MirtoRobot:
         self.motors = _services.get("motors")
         self.irs = _services.get('irs')
         self.bumps = _services.get('bumps')
+       # self.PID = _services.get('PID')
 
     def set_motors(self, speed1, speed2):
         """
@@ -85,6 +86,29 @@ class MirtoRobot:
         for sensor in sensor_order:
             sensor_values.append(self.get_ir(sensor))
         return sensor_values
+
+    def set_motor_rpm(self, motor_ID, rpm, duration):
+        """
+        This function takes in a motor_ID, RPM and duration
+        :param motor_ID: int
+        :param rpm: int
+        :param duration: int
+        :return: if error return -1
+        """
+        if motor_ID in [0,1]:
+            self.motors[motor_ID].set_motor_rpm( rpm, duration)
+        else:
+            return -1
+
+    def set_motors_rpm(self,rpm0, rpm1, duration):
+        """
+        This function takes in a RPM0, RPM1 and duration
+        :param rpm0: int
+        :param rpm1: int
+        :param duration: int
+        :return: None
+        """
+        self.motors[0].set_motors_rpm(rpm0, rpm1, duration)
 
 
 if __name__ == '__main__':
