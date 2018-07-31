@@ -2,8 +2,9 @@ from python_asip_client.boards.tcp_board import TCPBoard
 from python_asip_client.services.bump_service import BumpService
 from python_asip_client.services.ir_service import IRService
 from python_asip_client.services.motor_service import MotorService
-import sys
+from python_asip_client.services.lcd_service import LCDService
 
+import sys
 
 class TCPMirtoRobot(TCPBoard):
 
@@ -14,6 +15,7 @@ class TCPMirtoRobot(TCPBoard):
         self._motors = [MotorService(0, self.asip), MotorService(1, self.asip)]  # init 2 motors (wheels)
         self._irs = [IRService(0, self.asip), IRService(1, self.asip), IRService(2, self.asip)]  # init 3 IR sensors
         self._bumps = [BumpService(0, self.asip), BumpService(1, self.asip)]  # init 2 bump sensors
+        self._lcd = [LCDService(0, self.asip)]
         sys.stdout.write("DEBUG: instances of services created\n")
 
         # Setting reporting interval of sensors
@@ -32,7 +34,8 @@ class TCPMirtoRobot(TCPBoard):
         # self.get_asip_client().add_service(self._encoders[0].get_service_id(), self._encoders)
         self.get_asip_client().add_service(self._irs[0].get_service_id(), self._irs)
         self.get_asip_client().add_service(self._bumps[0].get_service_id(), self._bumps)
+        self.get_asip_client().add_service(self._lcd[0].get_service_id(), self._bumps)
         sys.stdout.write("DEBUG: services added\n")
 
     def get_services(self):
-        return {"motors": self._motors, "irs": self._irs, "bumps": self._bumps}
+        return {"motors": self._motors, "irs": self._irs, "bumps": self._bumps, "lcd": self._lcd}

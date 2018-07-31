@@ -8,6 +8,7 @@ class MirtoRobot:
         self.motors = _services.get("motors")
         self.irs = _services.get('irs')
         self.bumps = _services.get('bumps')
+        self.lcd = _services.get('lcd')
 
     def set_motors(self, speed1, speed2):
         """
@@ -108,6 +109,25 @@ class MirtoRobot:
         :return: None
         """
         self.motors[0].set_motors_rpm(rpm0, rpm1, duration)
+
+    def set_LCD_message(self, message, line):
+        """
+        This function takes in a message and a line number
+        :param message: string
+        :param line: int
+        :return: if error return -1
+        """
+        if line in [0,1,2,3,4]:
+            self.lcd[0].set_LCD_message(message, line)
+        else:
+            return -1
+
+    def clear_LCD(self):
+        """
+        This function clears the LCD display
+        :return: None
+        """
+        self.lcd[0].clear_LCD()
 
 
 if __name__ == '__main__':
