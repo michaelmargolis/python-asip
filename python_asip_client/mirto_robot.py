@@ -129,6 +129,16 @@ class MirtoRobot:
         """
         self.lcd[0].clear_LCD()
 
+    def rotate_robot_angle(self, angle, speed):
+        """
+        This function takes in a angle and a speed
+        :param angle: int
+        :param speed: int
+        :return: None
+        """
+        self.motors[0].rotate_robot_angle(angle, speed)
+
+
 
 if __name__ == '__main__':
     # services = SerialMirtoRobot()
