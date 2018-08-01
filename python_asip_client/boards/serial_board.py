@@ -31,7 +31,7 @@ class SerialBoard:
     # ************   END PRIVATE FIELDS DEFINITION ****************
 
     # Self constructor find the name of an active serial port and it creates a Serial objted
-    def __init__(self, tcp_handler=None):
+    def __init__(self, tcp_handler=None, enable_serial_listening=False):
         self.__threads = []  # List of threads
 
         # Serial connection creation, AsipClient object creation
@@ -48,7 +48,7 @@ class SerialBoard:
 
         # Listener creation
         try:
-            self.__threads.append(self.ListenerThread(self.asip, self.__ser_conn, self.DEBUG, tcp_handler))
+            self.__threads.append(self.ListenerThread(self.asip, self.__ser_conn, self.DEBUG, tcp_handler, enable_serial_listening))
             sys.stdout.write("Creating Threads: starting\n")
             for thread in self.__threads:
                 if not thread.is_alive():
@@ -217,7 +217,7 @@ class SerialBoard:
     class ListenerThread(Thread):
 
         # Overriding constructor
-        def __init__(self, asip, ser_conn, debug=False, tcp_handler=None):
+        def __init__(self, asip, ser_conn, debug=False, tcp_handler=None, enable_listen=True):
             Thread.__init__(self)
             self.asip = asip
             self.ser_conn = ser_conn
@@ -225,6 +225,7 @@ class SerialBoard:
             self._stopper = threading.Event()
             self.tcp_handler = tcp_handler
             sys.stdout.write("Listener Thread: thread process created.\n")
+            self.enable_listen = enable_listen
 
         # if needed, kill will stops the loop inside run method
         def stopper(self):
@@ -255,6 +256,8 @@ class SerialBoard:
                                     # sys.stdout.write("Sending message using TCP handler: {}\n".format(ser_buffer))
                                 else:
                                     self.asip.process_input(ser_buffer)
+                                if self.enable_listen:
+                                    sys.stdout.write("Serial: {}\n".format(ser_buffer))
                                 if self.DEBUG:
                                     sys.stdout.write("DEBUG: Complete message from serial: {}\n".format(ser_buffer))
                             ser_buffer = ""
