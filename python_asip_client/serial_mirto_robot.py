@@ -8,8 +8,8 @@ import time
 
 class SerialMirtoRobot(SerialBoard):
 
-    def __init__(self):
-        SerialBoard.__init__(self)
+    def __init__(self, tcp_handler=None, enable_serial_listening=False):
+        SerialBoard.__init__(self, tcp_handler, enable_serial_listening)
 
         # Creating instances of services
         self._motors = [MotorService(0, self.asip), MotorService(1, self.asip)]  # init 2 motors (wheels)
