@@ -37,29 +37,3 @@ class SerialMirtoRobot(SerialBoard):
 
     def get_services(self):
         return {"motors": self._motors, "irs": self._irs, "bumps": self._bumps}
-
-    # # method for testing
-    # def test(self):
-    #     try:
-    #         time.sleep(0.5)
-    #         while True:
-    #             sys.stdout.write("IR: {}, {}, {}\n".format(self.get_ir(0), self.get_ir(1), self.get_ir(2)))
-    #             sys.stdout.write("Encoders: {}, {}\n".format(self.get_count(0), self.get_count(1)))
-    #             sys.stdout.write("Bumpers: {}, {}\n".format(self.is_pressed(0), self.is_pressed(1)))
-    #             sys.stdout.write("Setting motors to 100, 0\n")
-    #             self.set_motors(100, 0)
-    #             time.sleep(1.5)
-    #             sys.stdout.write("Stopping motors\n")
-    #             self.stop_motors()
-    #             time.sleep(0.5)
-    #             sys.stdout.write("Setting motors to 0, -250\n")
-    #             self.set_motors(0, -250)
-    #             time.sleep(1.5)
-    #             sys.stdout.write("Stopping motors\n")
-    #             self.stop_motors()
-    #             time.sleep(0.5)
-    #     except Exception as e:
-    #         sys.stdout.write("Exception: caught {} in testing mirto robot\n".format(e))
-    #
-    #     finally:
-    #         sys.stdout.write("Finished tests\n")
