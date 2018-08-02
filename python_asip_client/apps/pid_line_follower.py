@@ -120,47 +120,41 @@ class PidLineFollower:
             sys.stdout.write("Error in PID follower: {}\n".format(error))
 
     def main(self, argv=None):
+        try:
+            if argv == None:  # in python first argument is always filename
+                # No command line parameters provided
+                self.set_PWR(50)
+                self.set_max_delta(50)
 
-        # try:
-        #     opts, args = getopt.getopt(argv,"hi:o:",["ifile=","ofile="])
-        # except getopt.GetoptError:
-        #     sys.stdout.write("mqtt_mirto_pid_follower.py ...\n")
-        #     sys.exit(2)
+                self.set_Kp(0.015)
+                self.set_Kd(0)
+                self.set_Ki(0)
 
-        if argv == None:  # in python first argument is always filename
-            # No command line parameters provided
-            self.set_PWR(50)
-            self.set_max_delta(50)
+                self.set_freq(50)
+                self.set_cut_off_ir(50)
 
-            self.set_Kp(0.015)
-            self.set_Kd(0)
-            self.set_Ki(0)
+                self.navigate()
 
-            self.set_freq(50)
-            self.set_cut_off_ir(50)
+            elif len(argv) == 7:
+                # the order is: power, maxDelta, Kp, Kd, Ki, freq, cutoffIR
+                try:
+                    self.set_PWR(argv[1])
+                    self.set_max_delta(argv[2])
 
-            self.navigate()
+                    self.set_Kp(argv[3])
+                    self.set_Kd(argv[4])
+                    self.set_Ki(argv[5])
 
-        elif len(argv) == 7:
-            # the order is: power, maxDelta, Kp, Kd, Ki, freq, cutoffIR
-            try:
-                self.set_PWR(argv[1])
-                self.set_max_delta(argv[2])
+                    self.set_freq(argv[6])
+                    self.set_cut_off_ir(argv[7])
+                except Exception as e:
+                    sys.stdout.write("Error parsing command line parameters! The correct syntax is: ")
+                    sys.stdout.write("Exception caught is: {}\n".format(e))
 
-                self.set_Kp(argv[3])
-                self.set_Kd(argv[4])
-                self.set_Ki(argv[5])
+                self.navigate()
 
-                self.set_freq(argv[6])
-                self.set_cut_off_ir(argv[7])
-            except Exception as e:
+            else:
                 sys.stdout.write("Error parsing command line parameters! The correct syntax is: ")
-                sys.stdout.write("Exception caught is: {}\n".format(e))
-
-            self.navigate()
-
-        else:
-            sys.stdout.write("Error parsing command line parameters! The correct syntax is: ")
 
 
 
