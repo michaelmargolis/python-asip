@@ -95,7 +95,7 @@ class MirtoRobot:
         :param duration: int
         :return: if error return -1
         """
-        if motor_id in [0, 1]:
+        if motor_ID in [0, 1]:
             self.motors[motor_id].set_motor_rpm(rpm, duration)
         else:
             return -1
@@ -138,9 +138,19 @@ class MirtoRobot:
         """
         self.motors[0].rotate_robot_angle(angle, speed)
 
+    def set_robot_speed_cm(self, speed, duration):
+        """
+        This function takes in a angle and a speed
+        :param angle: int
+        :param speed: int
+        :return: None
+        """
+        self.motors[0].set_robot_speed_cm(speed, duration)
+
+
 
 if __name__ == '__main__':
     # services = SerialMirtoRobot()
     ip_address = "10.14.122.61"
-    services = TCPMirtoRobot("robot3", 9999).get_services()
+    services = TCPMirtoRobot(ip_address, 9999).get_services()
     mirto_robot = MirtoRobot(services)
