@@ -8,6 +8,7 @@ class MirtoRobot:
         self.motors = _services.get("motors")
         self.irs = _services.get('irs')
         self.bumps = _services.get('bumps')
+        self.lcd = _services.get('lcd')
 
     def set_motors(self, speed1, speed2):
         """
@@ -85,6 +86,58 @@ class MirtoRobot:
         for sensor in sensor_order:
             sensor_values.append(self.get_ir(sensor))
         return sensor_values
+
+    def set_motor_rpm(self, motor_id, rpm, duration):
+        """
+        This function takes in a motor_ID, RPM and duration
+        :param motor_id: int
+        :param rpm: int
+        :param duration: int
+        :return: if error return -1
+        """
+        if motor_ID in [0, 1]:
+            self.motors[motor_id].set_motor_rpm(rpm, duration)
+        else:
+            return -1
+
+    def set_motors_rpm(self, rpm0, rpm1, duration):
+        """
+        This function takes in a RPM0, RPM1 and duration
+        :param rpm0: int
+        :param rpm1: int
+        :param duration: int
+        :return: None
+        """
+        self.motors[0].set_motors_rpm(rpm0, rpm1, duration)
+
+    def set_lcd_message(self, message, line):
+        """
+        This function takes in a message and a line number
+        :param message: string
+        :param line: int
+        :return: if error return -1
+        """
+        if line in [0, 1, 2, 3, 4]:
+            self.lcd[0].set_LCD_message(message, line)
+        else:
+            return -1
+
+    def clear_lcd(self):
+        """
+        This function clears the LCD display
+        :return: None
+        """
+        self.lcd[0].clear_LCD()
+
+    def rotate_robot_angle(self, angle, speed):
+        """
+        This function takes in a angle and a speed
+        :param angle: int
+        :param speed: int
+        :return: None
+        """
+        self.motors[0].rotate_robot_angle(angle, speed)
+
 
 
 if __name__ == '__main__':

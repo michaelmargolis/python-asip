@@ -15,6 +15,10 @@ class MotorService(AsipService):
     # Service constant
     __TAG_SET_MOTOR_SPEED = 'm'
     __TAG_RESET_ENCODER_COUNTS = 'E'
+    __TAG_ONE_MOTOR = 'r'
+    __TAG_BOTH_MOTORS = 'R'
+    __TAG_ROTATE_ROBOT = 'a'
+
 
     # The constructor takes the id of the motor.
     def __init__(self, id, asipclient):
@@ -91,3 +95,21 @@ class MotorService(AsipService):
     def reset_count(self):
         self.asip.get_asip_writer().write(
             "{},{},".format(self._serviceID, self.__TAG_RESET_ENCODER_COUNTS))
+
+
+    ##### PID service
+
+    def set_motor_rpm(self, rpm, duration):
+        self.asip.get_asip_writer().write("{},{},{},{},{}\n".format(
+            self._serviceID, self.__TAG_ONE_MOTOR, str(self._motorID), str(rpm), str(duration)))
+
+    def set_motors_rpm(self, rpm0, rpm1, duration):
+        self.asip.get_asip_writer().write("{},{},{},{},{}\n".format(
+            self._serviceID, self.__TAG_BOTH_MOTORS, str(rpm0), str(rpm1), str(duration)))
+
+    # Rotate Robot service
+
+    def rotate_robot_angle(self, speed, angle):
+        self.asip.get_asip_writer().write("{},{},{},{}\n".format(
+            self._serviceID, self.__TAG_ROTATE_ROBOT, str(speed), str(angle)))
+
