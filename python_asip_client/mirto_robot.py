@@ -9,6 +9,7 @@ class MirtoRobot:
         self.irs = _services.get('irs')
         self.bumps = _services.get('bumps')
         self.lcd = _services.get('lcd')
+        self.distance = _services.get('distance')
 
     def set_motors(self, speed1, speed2):
         """
@@ -118,7 +119,7 @@ class MirtoRobot:
         :return: if error return -1
         """
         if line in [0, 1, 2, 3, 4]:
-            self.lcd[0].set_LCD_message(message, line)
+            self.lcd[0].set_lcd_message(message, line)
         else:
             return -1
 
@@ -127,7 +128,7 @@ class MirtoRobot:
         This function clears the LCD display
         :return: None
         """
-        self.lcd[0].clear_LCD()
+        self.lcd[0].clear_lcd()
 
     def rotate_robot_angle(self, angle, speed):
         """
@@ -137,6 +138,17 @@ class MirtoRobot:
         :return: None
         """
         self.motors[0].rotate_robot_angle(angle, speed)
+
+    def get_sensor_distance(self):
+        """
+        This function is is returning last read distance from a ultrasonic sensor mounted on a robot.
+        :return: distance: double if exists otherwise returns -1
+        """
+        distance = self.distance[0].get_distance()
+        if distance is not None:
+            return distance
+        else:
+            return -1
 
 
 if __name__ == '__main__':

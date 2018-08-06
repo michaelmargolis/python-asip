@@ -2,8 +2,9 @@ from python_asip_client.boards.serial_board import SerialBoard
 from python_asip_client.services.bump_service import BumpService
 from python_asip_client.services.ir_service import IRService
 from python_asip_client.services.motor_service import MotorService
+from python_asip_client.services.lcd_service import LCDService
+from python_asip_client.services.distance_service import DistanceService
 import sys
-import time
 
 
 class SerialMirtoRobot(SerialBoard):
@@ -15,6 +16,8 @@ class SerialMirtoRobot(SerialBoard):
         self._motors = [MotorService(0, self.asip), MotorService(1, self.asip)]  # init 2 motors (wheels)
         self._irs = [IRService(0, self.asip), IRService(1, self.asip), IRService(2, self.asip)]  # init 3 IR sensors
         self._bumps = [BumpService(0, self.asip), BumpService(1, self.asip)]  # init 2 bump sensors
+        self._lcd = [LCDService(0, self.asip)]  # Init lcd service
+        self._distance = [DistanceService(0, self.asip)]  # Init distance service
         sys.stdout.write("DEBUG: instances of services created\n")
 
         # Setting reporting interval of sensors
@@ -26,6 +29,7 @@ class SerialMirtoRobot(SerialBoard):
         self._irs[2].set_reporting_interval(reporting_interval)
         self._bumps[0].set_reporting_interval(reporting_interval)
         self._bumps[1].set_reporting_interval(reporting_interval)
+        self._distance[0].set_reporting_interval(reporting_interval)
         sys.stdout.write("DEBUG: reporting interval set to {}\n".format(reporting_interval))
 
         #  Adding services
@@ -36,4 +40,5 @@ class SerialMirtoRobot(SerialBoard):
         sys.stdout.write("DEBUG: services added\n")
 
     def get_services(self):
-        return {"motors": self._motors, "irs": self._irs, "bumps": self._bumps}
+        return {"motors": self._motors, "irs": self._irs, "bumps": self._bumps, "lcd": self._lcd,
+                "distance": self._distance}

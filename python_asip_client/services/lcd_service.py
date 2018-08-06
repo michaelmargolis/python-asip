@@ -1,6 +1,7 @@
 from python_asip_client.services.asip_service import AsipService
 import sys
 
+
 class LCDService(AsipService):
     DEBUG = False
     _serviceID = 'L'
@@ -29,12 +30,11 @@ class LCDService(AsipService):
     def get_client(self):
         return self.asip
 
-
     def process_response(self, message):
         # Do nothing
         pass
 
-    def set_LCD_message(self, message, line):
+    def set_lcd_message(self, message, line):
         if line > 4 or line < 0:
             sys.stdout.write("ERROR: line number ({}) not in range! (0-4)".format(line))
             return
@@ -44,7 +44,7 @@ class LCDService(AsipService):
         self.asip.get_asip_writer().write("{},{},{},{}\n".format(
             self._serviceID, self.__TAG_LCD_WRITE, str(line), message))
 
-    def clear_LCD(self):
+    def clear_lcd(self):
         if self.DEBUG:
             sys.stdout.write("DEBUG: Clearing the LCD")
         self.asip.get_asip_writer().write("{},{}\n".format(

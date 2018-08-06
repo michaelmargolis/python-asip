@@ -13,7 +13,7 @@ class DistanceService(AsipService):
 
     # Service constants
     __REQUEST_SINGLE_DISTANCE = 'M'
-    __DISTANCE_EVENT = 'e'
+    zz = 'e'
 
     # The constructor takes the id of the distance sensor.
     def __init__(self, id, asipclient):
@@ -29,15 +29,13 @@ class DistanceService(AsipService):
         self._serviceID = id
 
     def request_distance(self):
-        #self.asip.get_asip_writer().write(self._serviceID+","+self.__REQUEST_SINGLE_DISTANCE+"\n")
-        self.asip.get_asip_writer().write("{},{}".format(self._serviceID,self.__REQUEST_SINGLE_DISTANCE))
+        self.asip.get_asip_writer().write("{},{}".format(self._serviceID, self.__REQUEST_SINGLE_DISTANCE))
 
     def get_distance(self):
         return self._last_distance
 
-    def enable_continuous_reporting(self,interval):
-        #self.asip.get_asip_writer().write(self._serviceID+","+AsipService.AUTOEVENT_REQUEST+","+interval+"\n")
-        self.asip.get_asip_writer().write("{},{},{}".format(self._serviceID,AsipService.AUTOEVENT_REQUEST,interval))
+    def set_reporting_interval(self, period):
+        self.asip.get_asip_writer().write("{},{},{}".format(self._serviceID, AsipService.AUTOEVENT_REQUEST, period))
 
     def process_response(self, message):
         # A response for a message is something like "@D,e,1,25,35,..."
