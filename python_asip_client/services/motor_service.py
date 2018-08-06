@@ -18,6 +18,7 @@ class MotorService(AsipService):
     __TAG_ONE_MOTOR = 'r'
     __TAG_BOTH_MOTORS = 'R'
     __TAG_ROTATE_ROBOT = 'a'
+    __TAG_ROBOT_SPEED_CM_PER_SECOND = 'c'
 
 
     # The constructor takes the id of the motor.
@@ -112,4 +113,10 @@ class MotorService(AsipService):
     def rotate_robot_angle(self, speed, angle):
         self.asip.get_asip_writer().write("{},{},{},{}\n".format(
             self._serviceID, self.__TAG_ROTATE_ROBOT, str(speed), str(angle)))
+
+    # Rotate Robot service
+
+    def set_robot_speed_cm(self, speed, duration):
+        self.asip.get_asip_writer().write("{},{},{},{}\n".format(
+            self._serviceID, self.__TAG_ROBOT_SPEED_CM_PER_SECOND, str(speed), str(duration)))
 
