@@ -7,6 +7,7 @@ from threading import Thread
 import socket
 import time
 import sys
+from socket import SHUT_RDWR
 
 
 class TCPBoard:

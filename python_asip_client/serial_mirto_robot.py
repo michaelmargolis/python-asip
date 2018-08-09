@@ -39,7 +39,7 @@ class SerialMirtoRobot(SerialBoard):
         self.get_asip_client().add_service(self._bumps[0].get_service_id(), self._bumps)
         self.all_services = {"motors": self._motors, "irs": self._irs, "bumps": self._bumps, "lcd": self._lcd,
                              "distance": self._distance}
-        sys.stdout.write("DEBUG: services added\nServices: {}".format(self.all_services))
+        sys.stdout.write("DEBUG: services added\nServices: {}".format(self.all_services.keys()))
 
     def get_services(self):
         return self.all_services

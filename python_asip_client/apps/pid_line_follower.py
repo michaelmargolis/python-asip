@@ -3,7 +3,7 @@ import sys
 import time
 from python_asip_client.mirto_robot import MirtoRobot
 from python_asip_client.tcp_mirto_robot import TCPMirtoRobot
-# from python_asip_client.serial_mirto_robot import SerialBoard
+from python_asip_client.serial_mirto_robot import SerialMirtoRobot
 
 
 class PidLineFollower:
@@ -71,8 +71,11 @@ class PidLineFollower:
         else:
             return (ir_middle * 2000 + ir_right * 4000) / (ir_left + ir_middle + ir_right)
 
-    def init_robot(self, hostname):
-        services = TCPMirtoRobot(hostname, 9999).get_services()
+    def init_robot(self, hostname=None):
+        if hostname is None:
+            services = SerialMirtoRobot().get_services()
+        else:
+            services = TCPMirtoRobot(hostname, 9999).get_services()
         self.robot = MirtoRobot(services)
 
     def navigate(self):
@@ -160,5 +163,5 @@ class PidLineFollower:
 
 if __name__ == '__main__':
     pid_follower = PidLineFollower()
-    pid_follower.init_robot('robot2')
+    pid_follower.init_robot()
     pid_follower.line_following_main()
