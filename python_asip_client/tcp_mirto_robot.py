@@ -10,7 +10,7 @@ import sys
 class TCPMirtoRobot(TCPBoard):
 
     def __init__(self, hostname=None, ip_address='127.0.0.1', tcp_port=9999):
-        TCPBoard.__init__(self, hostname, ip_address, tcp_port)
+        self.tcp_board = TCPBoard.__init__(self, hostname, ip_address, tcp_port)
 
         # Creating instances of services
         self._motors = [MotorService(0, self.asip), MotorService(1, self.asip)]  # init 2 motors (wheels)
@@ -37,8 +37,13 @@ class TCPMirtoRobot(TCPBoard):
         self.get_asip_client().add_service(self._irs[0].get_service_id(), self._irs)
         self.get_asip_client().add_service(self._bumps[0].get_service_id(), self._bumps)
         self.get_asip_client().add_service(self._lcd[0].get_service_id(), self._bumps)
-        sys.stdout.write("DEBUG: services added\n")
+
+        self.all_services = {"motors": self._motors, "irs": self._irs, "bumps": self._bumps, "lcd": self._lcd,
+                             "distance": self._distance}
+        sys.stdout.write("DEBUG: services added\nServices: {}".format(self.all_services))
 
     def get_services(self):
-        return {"motors": self._motors, "irs": self._irs, "bumps": self._bumps, "lcd": self._lcd,
-                "distance": self._distance}
+        return self.all_services
+
+    def stop_tcp_board(self):
+        self.tcp_board.thread_killer()

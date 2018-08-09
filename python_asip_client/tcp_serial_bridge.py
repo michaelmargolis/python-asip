@@ -9,6 +9,7 @@ class TCPHandler:
 
     def __init__(self, port=9999):
         # Create a socket object
+        socket.socket.allow_reuse_address = True
         self.serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.host = "0.0.0.0"
         self.port = port

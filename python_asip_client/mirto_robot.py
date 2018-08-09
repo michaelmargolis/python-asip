@@ -16,16 +16,16 @@ class MirtoRobot:
         Setting the two motors speed. Speed value is between: -100 and 100
         :param speed1: int
         :param speed2: int
-        :return:
+        :return: None
         """
         self.motors[0].set_motor(speed1)
         self.motors[1].set_motor(speed2)
-        sys.stdout.write("DEBUG: setting motors to {}, {}\n".format(speed1, speed2))
+        # sys.stdout.write("DEBUG: setting motors to {}, {}\n".format(speed1, speed2))
 
     def stop_motors(self):
         """
         Stopping the two motors
-        :return:
+        :return: None
         """
         self.motors[0].stop_motor()
         self.motors[1].stop_motor()
@@ -34,7 +34,7 @@ class MirtoRobot:
         """
         Retrieving data from IR sensor, -1 if sensor number is wrong
         :param sensor: int
-        :return:
+        :return: ir sensor values: int
         """
         return self.irs[sensor].get_ir() if sensor in [0, 1, 2] else -1
 
@@ -42,7 +42,7 @@ class MirtoRobot:
         """
         Retrieving count value from encoder sensor, -1 if sensor number is wrong
         :param sensor: int
-        :return:
+        :return: count for an encoder: int
         """
         return self.motors[sensor].get_count() if sensor in [0, 1] else -1
 
@@ -69,10 +69,10 @@ class MirtoRobot:
     def reset_count(self):
         """
         This function is resetting count for both encoders.
-        :return:
+        :return: None
         """
         self.motors[0].reset_count()
-        sys.stdout.write("Reset encoders\n")
+        # sys.stdout.write("Reset encoders\n")
 
     def get_all_ir_values(self, sensor_order=None):
         """
@@ -96,7 +96,7 @@ class MirtoRobot:
         :param duration: int
         :return: if error return -1
         """
-        if motor_ID in [0, 1]:
+        if motor_id in [0, 1]:
             self.motors[motor_id].set_motor_rpm(rpm, duration)
         else:
             return -1
