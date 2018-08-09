@@ -130,9 +130,9 @@ class MirtoRobot:
         """
         self.lcd[0].clear_lcd()
 
-    def rotate_robot_angle(self, angle, speed):
+    def rotate_robot_angle(self, speed, angle):
         """
-        This function takes in a angle and a speed
+        This function takes angle and speed and is rotating this robot for given angle.
         :param angle: int
         :param speed: int
         :return: None
@@ -152,8 +152,8 @@ class MirtoRobot:
 
     def set_robot_speed_cm(self, speed, duration):
         """
-        This function takes in a angle and a speed
-        :param angle: int
+        This function takes distance in cm and time in which is suppose to travel this distance.
+        :param duration:
         :param speed: int
         :return: None
         """

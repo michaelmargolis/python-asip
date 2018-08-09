@@ -25,7 +25,7 @@ class DistanceService(AsipService):
     def get_service_id(self):
         return self._serviceID
 
-    def set_service_id(self,id):
+    def set_service_id(self, id):
         self._serviceID = id
 
     def request_distance(self):
