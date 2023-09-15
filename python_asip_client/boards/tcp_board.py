@@ -116,6 +116,11 @@ class TCPBoard:
     def get_asip_client(self):
         return self.asip
 
+    # TODO: test needed for linux and windows implementation
+    def abort(self):
+        self.thread_killer()
+        self.close_tcp_conn()
+
     # ************ END PUBLIC METHODS *************
 
     # ************ BEGIN PRIVATE METHODS *************

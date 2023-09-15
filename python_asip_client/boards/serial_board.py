@@ -9,6 +9,7 @@ from threading import Thread
 from python_asip_client.boards.asip_writer import AsipWriter
 from serial import Serial
 import threading
+import traceback
 
 
 class SerialBoard:
@@ -99,9 +100,11 @@ class SerialBoard:
         for i in self.__threads:
             try:
                 i.stopper()
-                sys.stdout.write("Killing Threads: event for {} successfully set\n".format(i))
+                if self.DEBUG:
+                    sys.stdout.write("Killing Threads: event for {} successfully set\n".format(i))
             except Exception as e:
                 sys.stdout.write("Caught exception while stropping thread {}.\nException is: {}\n".format(i, e))
+                print(traceback.format_exc())
         time.sleep(0.5)
         sys.stdout.write("Killing Threads: waiting for join\n")
         for i in self.__threads:
@@ -186,6 +189,19 @@ class SerialBoard:
                 pass
         if self.DEBUG:
             sys.stdout.write("DEBUG: available ports are {}\n".format(self.__ports))
+            
+  
+    """abort
+    : closes serial port and terminates threads 
+    :returns:
+        nothing
+    """
+    # TODO: test needed for linux and windows implementation
+    def abort(self):
+        self.thread_killer()
+        self.close_serial()
+
+
 
     # ************ END PRIVATE METHODS *************
 
@@ -271,6 +287,7 @@ class SerialBoard:
                     self.stopper()
                 except Exception as e:
                     sys.stdout.write("Caught exception: {}\nListener Thread will NOT stop\n".format(e))
+                    print(traceback.format_exc())
                     #self.stopper()
 
             sys.stdout.write("Listener Thread: stopped\n")
