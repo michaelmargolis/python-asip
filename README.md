@@ -23,7 +23,8 @@ These instructions will get you a copy of the project up and running on your loc
 1) apt-get install python3
 2) apt-get install pip3
 3) sudo install pip3 pyserial
-4) pip3 install --user python-asip-client --upgrade
+~~4) pip3 install --user python-asip-client --upgrade~~
+  (NOTE this fork must be installed manually)
 4.1) pip3 install --user . --no-cache-dir (When installing local files, development mode)
 ```
 
@@ -49,7 +50,7 @@ Give an example
 
 ## Deployment
 
-This package is deployed on pip global server. In order to make new release, please follow below:
+~~This package is deployed on pip global server.~~ In order to make new release, please follow below:
 
 ```
 In case of there is an existing buid it can be removed by follwoing command:
