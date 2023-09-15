@@ -3,7 +3,7 @@ import sys
 
 class NeoPixelService(AsipService):
     DEBUG = False
-    _serviceID = 'N'
+    _serviceID = 'P'
 
     # A strip has a unique ID (there may be more than one strip attached, each one has a different stripID)
     _stripID = ""
@@ -11,7 +11,7 @@ class NeoPixelService(AsipService):
 
     # Service constants
     __TAG_SET_STRIP_BRIGHTNESS = 'B'
-    __TAG_SET_STRIP_COLOR = 'C'
+    __TAG_SET_STRIP_RGB = 'p'
     __TAG_SHOW_STRIP = 'S'
 
     # The constructor takes the id of the distance sensor.
@@ -46,17 +46,18 @@ class NeoPixelService(AsipService):
         pass
 
     def set_pixel_color(self, pixel, red, green, blue):
+        # sets the given pixel - note pixel 0 is the first and only pixel on the mirto board
         if self.DEBUG:
-            sys.stdout.write("DEBUG: setting colors on strip {} pixel {} to {} {} {}\n"
-                             .format(self._stripID, pixel, red, green, blue))
+            sys.stdout.write("DEBUG: setting pixel {} color to {} {} {}\n"
+                             .format(pixel, red, green, blue))
         # self.asip.get_asip_writer().write(self._serviceID + ","
-        #                                     + self.__TAG_SET_STRIP_COLOR + ","
+        #                                     + self.__TAG_SET_STRIP_RGB + ","
         #                                     + self._stripID + ","
         #                                     + pixel + ","
         #                                     + red + "," + green + "," + blue)
-        self.asip.get_asip_writer().write("{},{},{},{},{},{},{}".format(
-            self._serviceID, self.__TAG_SET_STRIP_COLOR, self._stripID, pixel, red, green, blue))
-
+        self.asip.get_asip_writer().write("{},{},{},{},{{0:{},{},{}}}".format(
+            self._serviceID, self.__TAG_SET_STRIP_RGB,pixel,1, red, green, blue))
+            
 
     def set_brightness(self, b):
         if self.DEBUG:

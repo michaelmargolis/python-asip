@@ -13,13 +13,13 @@ class MotorService(AsipService):
     _pulse = 0  # Pulse for the encoder
     __TAG_ENCODER_RESPONSE = 'e'
     # Service constant
-    __TAG_SET_MOTOR_SPEED = 'm'
-    __TAG_RESET_ENCODER_COUNTS = 'E'
-    __TAG_ONE_MOTOR = 'r'
-    __TAG_BOTH_MOTORS = 'R'
+    __TAG_SET_MOTOR_POWER = 'm'
+    __TAG_SET_MOTOR_RPM = 'r'
+    __TAG_SET_BOTH_MOTORS_POWER = 'M'
+    __TAG_SET_BOTH_MOTORS_RPM = 'R'
     __TAG_ROTATE_ROBOT = 'a'
     __TAG_ROBOT_SPEED_CM_PER_SECOND = 'c'
-
+    __TAG_RESET_ENCODER_COUNTS = 'E'
 
     # The constructor takes the id of the motor.
     def __init__(self, id, asipclient):
@@ -81,7 +81,7 @@ class MotorService(AsipService):
         if self.DEBUG:
             sys.stdout.write("DEBUG: setting motor {} to {}\n".format(self._motorID, speed))
         self.asip.get_asip_writer().write("{},{},{},{}".format(
-            self._serviceID, self.__TAG_SET_MOTOR_SPEED, 0 if self._motorID == 1 else 1, speed))
+            self._serviceID, self.__TAG_SET_MOTOR_POWER, 0 if self._motorID == 1 else 1, speed))
 
     # Stop the motor (just set speed to 0)
     def stop_motor(self):
@@ -102,11 +102,11 @@ class MotorService(AsipService):
 
     def set_motor_rpm(self, rpm, duration):
         self.asip.get_asip_writer().write("{},{},{},{},{}\n".format(
-            self._serviceID, self.__TAG_ONE_MOTOR, str(self._motorID), str(rpm), str(duration)))
+            self._serviceID, self.__TAG_SET_MOTOR_RPM, str(self._motorID), str(rpm), str(duration)))
 
     def set_motors_rpm(self, rpm0, rpm1, duration):
         self.asip.get_asip_writer().write("{},{},{},{},{}\n".format(
-            self._serviceID, self.__TAG_BOTH_MOTORS, str(rpm0), str(rpm1), str(duration)))
+            self._serviceID, self.__TAG_SET_BOTH_MOTORS_RPM, str(rpm0), str(rpm1), str(duration)))
 
     # Rotate Robot service
 

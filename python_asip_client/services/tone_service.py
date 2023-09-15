@@ -2,12 +2,11 @@ from python_asip_client.services.asip_service import AsipService
 import sys
 
 
-class LCDService(AsipService):
+class ToneService(AsipService):
     DEBUG = False
-    _serviceID = 'L'
+    _serviceID = 'T'
 
-    __TAG_LCD_WRITE = 'W'
-    __TAG_LCD_CLEAR = 'C'
+    __TAG_TONE_PLAY = 'P'  # play tone of given frequency and duration
 
     asip = None # The service should be attached to a client
 
@@ -34,18 +33,9 @@ class LCDService(AsipService):
         # Do nothing
         pass
 
-    def set_lcd_message(self, message, line):
-        if line < 0:  # note asip firmware checks line does not exceed physical LCD
-            sys.stdout.write("ERROR: invalid line number ({})".format(line))
-            return
+    def play(self, frequency, duration): # f in Hz, duration in ms
         if self.DEBUG:
-            sys.stdout.write("DEBUG: Writing: {} to line {} on the LCD\n".format(message,line))
+            sys.stdout.write("DEBUG: Playing tone {} Hz for {} ms\n".format(frequency,duration))
 
         self.asip.get_asip_writer().write("{},{},{},{}\n".format(
-            self._serviceID, self.__TAG_LCD_WRITE, str(line), message))
-
-    def clear_lcd(self):
-        if self.DEBUG:
-            sys.stdout.write("DEBUG: Clearing the LCD")
-        self.asip.get_asip_writer().write("{},{}\n".format(
-            self._serviceID, self.__TAG_LCD_CLEAR))
+            self._serviceID, self.__TAG_TONE_PLAY, frequency, duration))

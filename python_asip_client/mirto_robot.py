@@ -1,5 +1,5 @@
-from python_asip_client.tcp_mirto_robot import TCPMirtoRobot
-from python_asip_client.serial_mirto_robot import SerialMirtoRobot
+# from python_asip_client.tcp_mirto_robot import TCPMirtoRobot
+# from python_asip_client.serial_mirto_robot import SerialMirtoRobot
 import sys
 
 
@@ -10,17 +10,19 @@ class MirtoRobot:
         self.bumps = _services.get('bumps')
         self.lcd = _services.get('lcd')
         self.distance = _services.get('distance')
+        self.tone = _services.get('tone')
+        self.neopixel = _services.get('neopixel')
 
-    def set_motors(self, speed1, speed2):
+    def set_motors(self, power_percent1, power_percent2):
         """
-        Setting the two motors speed. Speed value is between: -100 and 100
-        :param speed1: int
-        :param speed2: int
+        Setting the two motors power. value is between: -100 and 100
+        :param power_percent1: int
+        :param power_percent2: int
         :return: None
         """
-        self.motors[0].set_motor(speed1)
-        self.motors[1].set_motor(speed2)
-        # sys.stdout.write("DEBUG: setting motors to {}, {}\n".format(speed1, speed2))
+        self.motors[0].set_motor(power_percent1)
+        self.motors[1].set_motor(power_percent2)
+        # sys.stdout.write("DEBUG: setting motors to {}, {}\n".format(power_percent1, power_percent2))
 
     def stop_motors(self):
         """
@@ -57,6 +59,12 @@ class MirtoRobot:
                     [self.motors[1].get_count(), self.motors[1].get_pulse()]]
         else:
             return [self.motors[0].get_count(), self.motors[1].get_count()]
+
+    def is_any_motor_moving(self):
+        """
+        returns False iff both motors are stopped
+        """
+        return self.motors[0].get_pulse() != 0 or self.motors[1].get_pulse() != 0 
 
     def is_bump_pressed(self, sensor):
         """
@@ -129,19 +137,40 @@ class MirtoRobot:
         :return: None
         """
         self.lcd[0].clear_lcd()
-
-    def rotate_robot_angle(self, speed, angle):
+        
+    def play_tone(self, frequency, duration):
         """
-        This function takes angle and speed and is rotating this robot for given angle.
-        :param angle: int
-        :param speed: int
+        This function plays a square wave tone at the given frequency for the given duration in ms.
+        :param frequency: int
+        :param duration: int
         :return: None
         """
-        self.motors[0].rotate_robot_angle(angle, speed)
+        self.tone[0].play(frequency, duration)
+
+        
+    def set_pixel_color(self, pixel, R, G, B):
+        """
+        This function sets a neopixel to the given RGB (0-255) values
+        :param pixel: int (0 is the first and only pixel on a mirto board)
+        :param red: int
+        :param green: int
+        :param blue: int
+        :return: None
+        """
+        self.neopixel[0].set_pixel_color(pixel, R, G, B)    
+        
+    def rotate_robot_angle(self, rate, angle):
+        """
+        This function rotates the robot by the given angle at the given rate.
+        :param angle: int  (degrees) 
+        :param rate: int (degrees per second)
+        :return: None
+        """
+        self.motors[0].rotate_robot_angle(rate, angle)
 
     def get_sensor_distance(self):
         """
-        This function is is returning last read distance from a ultrasonic sensor mounted on a robot.
+        This function returns last read distance from a ultrasonic sensor mounted on a robot.
         :return: distance: double if exists otherwise returns -1
         """
         distance = self.distance[0].get_distance()
@@ -159,9 +188,10 @@ class MirtoRobot:
         """
         self.motors[0].set_robot_speed_cm(speed, duration)
 
-
+"""
 if __name__ == '__main__':
     # services = SerialMirtoRobot()
     ip_address = "10.14.122.61"
     services = TCPMirtoRobot(ip_address, 9999).get_services()
     mirto_robot = MirtoRobot(services)
+"""

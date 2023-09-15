@@ -50,8 +50,8 @@ class IRService(AsipService):
         # A response for a message is something like "@R,e,3,{100,200,300}"
         if message[3] != self.__TAG_IR_RESPONSE:
             # FIXME: improve error checking
-            # We have received a message but it is not a bump reporting event
-            sys.stdout.write("Distance message received but I don't know how to process it: {}\n".format(message))
+            # We have received a message but it is not an IR reporting event
+            sys.stdout.write("Unexpected event message in IR service: {}\n".format(message))
         else:
             if self.DEBUG:
                 sys.stdout.write("DEBUG: received message is {}\n".format(message))
