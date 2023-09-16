@@ -112,11 +112,10 @@ class MotorService(AsipService):
 
     def rotate_robot_angle(self, speed, angle):
         self.asip.get_asip_writer().write("{},{},{},{}\n".format(
-            self._serviceID, self.__TAG_ROTATE_ROBOT, str(speed), str(angle)))
-
+            self._serviceID, self.__TAG_ROTATE_ROBOT, str(round(speed)), str(round(angle))))
     # Rotate Robot service
 
     def set_robot_speed_cm(self, speed, duration):
         self.asip.get_asip_writer().write("{},{},{},{}\n".format(
-            self._serviceID, self.__TAG_ROBOT_SPEED_CM_PER_SECOND, str(speed), str(duration)))
+            self._serviceID, self.__TAG_ROBOT_SPEED_CM_PER_SECOND, str(round(speed)), str(round(duration))))
 
