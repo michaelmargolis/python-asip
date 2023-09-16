@@ -39,10 +39,14 @@ class SerialBoard:
         try:
             self.__ser_conn = Serial()
             self.serial_port_finder(self.__PORT_INDEX_TO_OPEN)
-            sys.stdout.write("Setting Serial: attempting to open {}\n".format(self.__ports[self.__PORT_INDEX_TO_OPEN]))
-            self.open_serial(self.__ports[self.__PORT_INDEX_TO_OPEN], self.__BAUD_RATE)
-            sys.stdout.write("Setting Serial: serial port {} opened\n".format(self.__ports[self.__PORT_INDEX_TO_OPEN]))
-            self.asip = AsipClient(self.SimpleWriter(self.__ser_conn, self.DEBUG))
+            if len(self.__ports) > 0:
+                sys.stdout.write("Setting Serial: attempting to open {}\n".format(self.__ports[self.__PORT_INDEX_TO_OPEN]))
+                self.open_serial(self.__ports[self.__PORT_INDEX_TO_OPEN], self.__BAUD_RATE)
+                sys.stdout.write("Setting Serial: serial port {} opened\n".format(self.__ports[self.__PORT_INDEX_TO_OPEN]))
+                self.asip = AsipClient(self.SimpleWriter(self.__ser_conn, self.DEBUG))
+            else:
+                sys.stdout.write("\nNo available serial ports found, exiting\n")
+                sys.exit(1)
         except serial.SerialException as e:
             sys.stdout.write("Exception while init serial connection: {}\n".format(e))
             sys.exit(1)
