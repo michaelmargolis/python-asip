@@ -102,20 +102,20 @@ class MotorService(AsipService):
 
     def set_motor_rpm(self, rpm, duration):
         self.asip.get_asip_writer().write("{},{},{},{},{}\n".format(
-            self._serviceID, self.__TAG_SET_MOTOR_RPM, str(self._motorID), str(round(rpm)), str(round(duration))))
+            self._serviceID, self.__TAG_SET_MOTOR_RPM, self._motorID, round(rpm), round(duration)))
 
     def set_motors_rpm(self, rpm0, rpm1, duration):
         self.asip.get_asip_writer().write("{},{},{},{},{}\n".format(
-            self._serviceID, self.__TAG_SET_BOTH_MOTORS_RPM, str(round(rpm0)), str(round(rpm1)), str(round(duration))))
+            self._serviceID, self.__TAG_SET_BOTH_MOTORS_RPM, round(rpm0), round(rpm1), round(duration)))
 
     # Rotate Robot service
 
     def rotate_robot_angle(self, speed, angle):
         self.asip.get_asip_writer().write("{},{},{},{}\n".format(
-            self._serviceID, self.__TAG_ROTATE_ROBOT, str(round(speed)), str(round(angle))))
+            self._serviceID, self.__TAG_ROTATE_ROBOT, round(speed), round(angle)))
     # Rotate Robot service
 
     def set_robot_speed_cm(self, speed, duration):
         self.asip.get_asip_writer().write("{},{},{},{}\n".format(
-            self._serviceID, self.__TAG_ROBOT_SPEED_CM_PER_SECOND, str(round(speed)), str(round(duration))))
+            self._serviceID, self.__TAG_ROBOT_SPEED_CM_PER_SECOND, round(speed), round(duration)))
 

@@ -51,4 +51,4 @@ class ServoService(AsipService):
         #                                     + self._servoID + ","
         #                                     + angle)
         self.asip.get_asip_writer().write("{},{},{},{}".format(
-            self._serviceID, self.__TAG_SET_SERVO_ANGLE, self._servoID, angle))
+            self._serviceID, self.__TAG_SET_SERVO_ANGLE, self._servoID, round(angle)))
